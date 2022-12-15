@@ -1,4 +1,4 @@
-import {StacheElement} from "can";
+import StacheElement from "can-stache-element";
 
 
 class AppMain extends StacheElement {

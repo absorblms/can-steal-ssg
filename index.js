@@ -1,16 +1,17 @@
 console.log("first thing loaded");
 
-define(["can-globals"],function(globals){
+define(["can-steal-ssg/get-app-running","can-globals"],function(app, globals){
 	const imp = "import";
+
+	app.beforeEverything();
 
 	console.log("got any dependencies we wanted to load")
 	return {
 		translate: function(load){
 			return `
-			 ${imp} Zone from "can-zone";
-			`+load.source+`
-				document.body.append(document.createElement(mainElementName));
-			`;
+			 ${imp} app from "can-steal-ssg/get-app-running";
+			`+load.source+`;
+			app.after(mainElementName)`;
 		}
 	}
 })
