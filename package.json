@@ -38,6 +38,9 @@
     "plugins": [
       "can-steal-ssg",
       "steal-css"
+    ],
+		"bundle": [
+      "can-steal-ssg/app/moo/moo"
     ]
   },
   "engines": {
