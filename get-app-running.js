@@ -1,6 +1,9 @@
 const Zone = require("can-zone");
 const xhrZone = require("can-zone/xhr");
 const RoutePushstate = require("can-route-pushstate");
+const isNode = require("can-globals/is-node/is-node");
+
+isNode(false);
 
 const sharedZone = new Zone({ plugins: [xhrZone] })
 

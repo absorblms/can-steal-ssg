@@ -9,21 +9,23 @@ const { JSDOM } = jsdom
 const { XMLHttpRequest } = require("w3c-xmlhttprequest")
 
 const helpers = {
-	buildBrowserEnvironment(){
+	buildBrowserEnvironment(path = ""){
 		const html = `<!doctype html>
 		<head></head>
 		<body></body>`
 
-		const dom = new JSDOM(html)
+		const dom = new JSDOM(html,{
+			url: "http://localhost:4200/"+path
+		})
 
 		// This is a bad idea, JSDOM offers options
 		// in its constructor to navigate "naturally" to a page
-		delete dom.window.location
-		dom.window.location = url.parse("http://localhost:4200", true)
+		//delete dom.window.location
+		//dom.window.location = url.parse("http://localhost:4200", true)
 
-		if (!dom.window.location.protocol) {
-		  dom.window.location.protocol = "http:"
-		}
+		//if (!dom.window.location.protocol) {
+		//  dom.window.location.protocol = "http:"
+		//}
 
 		// if(request.headers && request.headers["accept-language"]) {
 		//     dom.navigator.language = request.headers["accept-language"];
@@ -37,6 +39,8 @@ const helpers = {
 		global.location = dom.window.location
 		global.Node = window.Node
 		global.XMLHttpRequest = XMLHttpRequest
+		global.history = {};
+		global.addEventListener = function(){}
 		return dom;
 	},
 	makeCustomTagsInert(document) {
