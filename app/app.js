@@ -8,11 +8,14 @@ class AppMain extends StacheElement {
     <p>Top 5 animal in the world is Cow</p>
     <p>First: {{ first }}</p>
     <p>Second: {{ second }}</p>
+		<button on:click="this.click()">Click</button>
+		{{# if(this.clicked) }}clicked{{/ if}}
   `
 
   static props = {
     first: "",
     second: "",
+		clicked: {default: false}
   }
 
   connected() {
@@ -24,6 +27,9 @@ class AppMain extends StacheElement {
       this.second = "0.01 minutes have passed"
     }, 600)
   }
+	click(){
+		this.clicked = true;
+	}
 }
 
 customElements.define("app-main", AppMain)

@@ -23,9 +23,13 @@
     "can-zone": "^1.0.1",
     "jsdom": "^20.0.3",
     "steal": "^2.3.0",
-    "steal-tools": "^2.3.0"
+    "steal-tools": "^2.3.0",
+    "w3c-xmlhttprequest": "^3.0.4"
   },
   "steal": {
+    "babelOptions": {
+      "plugins": ["transform-class-properties"]
+    },
     "plugins": [
       "can-steal-ssg"
     ]

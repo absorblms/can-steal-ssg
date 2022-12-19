@@ -4,23 +4,21 @@ const RoutePushstate = require("can-route-pushstate");
 
 const sharedZone = new Zone({ plugins: [xhrZone] })
 
-let markAsInert = true;
-
-module.exports = {
-	beforeEverything(){
+function beforeEverything(){
+	if(globalThis.customElements) {
 		const oldDefine = customElements.define;
 		customElements.define = function(tag, ElementClass){
 
 			class RehydrateClass extends ElementClass {
 				initialize(...args){
-					if(this.__isInert) {
+					if(this.getAttribute("can-ssg") === "inert") {
 
 					} else {
 						return super.initialize(...args)
 					}
 				}
 				connectedCallback(...args){
-					if(this.__isInert) {
+					if(this.getAttribute("can-ssg") === "inert") {
 
 					} else {
 						return super.connectedCallback(...args)
@@ -34,11 +32,15 @@ module.exports = {
 					}
 				}
 			}
-
-			document.querySelectorAll(tag).forEach((el)=> el.__isInert = true)
-			sharedZone.run(() => oldDefine.call(this, tag, RehydrateClass))
+			oldDefine.call(this, tag, RehydrateClass)
 		}
-	},
+	}
+
+}
+beforeEverything();
+
+
+module.exports = {
 	after(mainElementName){
 		sharedZone
     .run(() => {})
@@ -50,10 +52,8 @@ module.exports = {
       }
     })
 
-
-		if (globalThis.canStacheElementInertPrerendered) {
-			setTimeout(function(){
-				console.log("Running reattachment zone")
+		if (document.body.getAttribute("can-ssg")) {
+			//setTimeout(function(){
 				new Zone({
 					plugins: [xhrZone],
 				})
@@ -85,7 +85,7 @@ module.exports = {
 						staticapp.remove()
 						liveapp.style.display = ""
 					})
-			},5000)
+			//},5000)
 
 		} else {
 			document.body.append(document.createElement(mainElementName));

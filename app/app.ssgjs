@@ -1,3 +1,10 @@
 import "./app";
 
 export const mainElementName = "app-main";
+
+
+export function updateDocumentBeforeScrape(document) {
+	const style = document.createElement("style");
+	style.innerHTML = `* {color: green;}`
+	document.querySelector("app-main").append(style)
+}
