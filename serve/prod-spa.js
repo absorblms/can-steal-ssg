@@ -6,7 +6,7 @@ const app = express()
 
 
 // app things
-app.use("/", express.static(path.join(__dirname, "..","prod")))
+app.use("/", express.static(path.join(process.cwd(), "prod")))
 
 
 

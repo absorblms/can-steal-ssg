@@ -39,7 +39,7 @@
       "can-steal-ssg",
       "steal-css"
     ],
-		"bundle": [
+    "bundle": [
       "can-steal-ssg/app/moo/moo"
     ]
   },

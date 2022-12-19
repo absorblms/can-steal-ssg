@@ -4,15 +4,16 @@ const path = require("path")
 
 const app = express()
 
+const rootDir = process.cwd();
 
 // root things
-app.use("/get-app-running.js", express.static(path.join(__dirname,"..", "get-app-running.js")))
-app.use("/index.js", express.static(path.join(__dirname,"..", "index.js")))
-app.use("/package.json", express.static(path.join(__dirname,"..", "package.json")))
+app.use("/get-app-running.js", express.static(path.join(rootDir, "get-app-running.js")))
+app.use("/index.js", express.static(path.join(rootDir, "index.js")))
+app.use("/package.json", express.static(path.join(rootDir, "package.json")))
 
 // app things
-app.use("/node_modules", express.static(path.join(__dirname, "..","node_modules")))
-app.use("/app", express.static(path.join(__dirname,"..", "app")))
+app.use("/node_modules", express.static(path.join(rootDir, "node_modules")))
+app.use("/app", express.static(path.join(rootDir, "app")))
 
 
 app.use("*", (req, res) => {
