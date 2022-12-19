@@ -5,7 +5,7 @@ const helpers = require("./helpers");
 
 const MAIN = "~/app/app.ssgjs!can-steal-ssg";
 
-const OUTPUT_PATH = path.join( __dirname, "../app/dev-ssg.html");
+const OUTPUT_PATH = path.join(process.cwd(), "app/dev-ssg.html");
 
 
 const steal = require.resolve("steal/steal.js")

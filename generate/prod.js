@@ -6,12 +6,12 @@ const stealTools = require("steal-tools")
 
 
 const MAIN = "~/app/app.ssgjs!can-steal-ssg";
-const CONFIG_PATH = path.join(__dirname,"..","package.json!npm");
+const CONFIG_PATH = path.join(process.cwd(), "package.json!npm");
 const DEST = "prod";
-const OUTPUT_PATH = path.join(__dirname,"..",DEST,"prod-ssg.html");
+const OUTPUT_PATH = path.join(process.cwd(), DEST, "prod-ssg.html");
 
 const BUILD_OPTIONS = {
-  dest: path.join(__dirname,"..",DEST),
+  dest: path.join(process.cwd(), DEST),
   bundleSteal: true,
 	minify: false
 };
