@@ -18,9 +18,12 @@
   "homepage": "https://github.com/canjs/can-steal-ssg#readme",
   "dependencies": {
     "can-globals": "^1.2.2",
+    "can-route": "^5.0.2",
     "can-route-pushstate": "^6.0.0",
     "can-stache-element": "^1.2.0",
+    "can-stache-route-helpers": "^2.0.0",
     "can-zone": "^1.0.1",
+    "express": "^4.18.2",
     "jsdom": "^20.0.3",
     "steal": "^2.3.0",
     "steal-tools": "^2.3.0",
@@ -33,7 +36,8 @@
       ]
     },
     "plugins": [
-      "can-steal-ssg","steal-css"
+      "can-steal-ssg",
+      "steal-css"
     ]
   },
   "engines": {
