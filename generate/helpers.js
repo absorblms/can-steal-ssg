@@ -57,26 +57,62 @@ const helpers = {
 		document.body.append(devScript);
 	},
 	updateForProd: function(document, config, buildOptions, buildResult, outputPath){
+		// remove all style tags ... I wish we knew which ones were injected by steal ...
+		// steal could start using adoptStyles
+		Array.from( document.getElementsByTagName("style") ).forEach((style)=>{
+			style.remove();
+		})
+
 		document.body.setAttribute("can-ssg","prod")
 		helpers.makeCustomTagsInert(document);
 
 		// figure out which bundle has the main module
 		const mainModuleFullName = buildResult.loader.main;
 
-		const mainBundle = buildResult.bundles.find( (bundle) => {
-			return bundle.bundles.includes(mainModuleFullName);
+		const mainJSBundle = buildResult.bundles.find( (bundle) => {
+			return bundle.bundles.includes(mainModuleFullName) && bundle.buildType === "js";
 		})
 
-		if(!mainBundle) {
-			console.error("Can't find the main bundle");
-			process.exit(1)
+		if(mainJSBundle) {
+			const pathToBundle = path.relative(path.dirname(outputPath), mainJSBundle.bundlePath);
+
+			const prodScript = document.createElement("script");
+			prodScript.setAttribute("src",pathToBundle);
+			document.body.append(prodScript);
 		}
 
-		const pathToBundle = path.relative(path.dirname(outputPath), mainBundle.bundlePath);
+		const mainCssBundle = buildResult.bundles.find( (bundle) => {
+			return bundle.bundles.includes(mainModuleFullName) && bundle.buildType === "css";
+		});
+		if(mainCssBundle) {
+			const pathToCSSBundle = path.relative(path.dirname(outputPath), mainCssBundle.bundlePath);
 
-		const prodScript = document.createElement("script");
-		prodScript.setAttribute("src",pathToBundle);
-		document.body.append(prodScript);
+			const prodCSS = document.createElement("link");
+			prodCSS.setAttribute("rel","stylesheet");
+			prodCSS.setAttribute("href",pathToCSSBundle);
+			document.head.append(prodCSS);
+
+
+		}
+		const aBundlePath = mainJSBundle?.bundlePath ?? mainCssBundle?.bundlePath;
+		if(aBundlePath) {
+			const pathToBundles = path.relative(path.dirname(outputPath), aBundlePath.replace(/bundles\/.*/,"bundles"));
+
+			const stealConfigScript = document.createElement("script");
+			const stealConfig = {
+				paths: {
+					"bundles/*": pathToBundles+"/*.js",
+					"bundles/*.css": pathToBundles+"/*css"
+				}
+			};
+
+			stealConfigScript.innerHTML = `
+				steal = ${JSON.stringify(stealConfig)}
+			`;
+			document.head.prepend(stealConfigScript);
+
+		}
+
 	},
 	loadAppInExistingBrowserEnvironment(main){
 		return steal

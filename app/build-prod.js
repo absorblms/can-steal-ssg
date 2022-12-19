@@ -8,6 +8,24 @@ var promise = stealTools.build({
   dest: path.join(__dirname,"..","prod"),
   bundleSteal: true
 }).then( (buildResult)=>{
-	console.log(buildResult.loader.main)
+
+	buildResult.bundles.forEach( b => {
+		console.log(b.bundlePath, b.bundles)
+		if(b.bundlePath.endsWith(".css")) {
+			console.log(b)
+		}
+	});
+
+
+
+	/*console.log(buildResult.bundles)
 	//console.log(buildResult.configuration,, buildResult.bundles)
+
+
+	const mainModuleFullName = buildResult.loader.main;
+
+	const mainBundle = buildResult.bundles.find( (bundle) => {
+		return bundle.bundles.includes(mainModuleFullName);
+	})*/
+
 });

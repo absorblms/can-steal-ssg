@@ -1,5 +1,5 @@
 import StacheElement from "can-stache-element";
-
+import "./app.css";
 
 class AppMain extends StacheElement {
   static view = `
