@@ -1,13 +1,15 @@
 const express = require("express")
 const path = require("path")
 
+const {
+	name: appName,
+	main: appMain
+} = require(path.join(process.cwd(), "package.json"));
 
 const app = express()
 
-
 // app things
 app.use("/", express.static(path.join(process.cwd(), "prod")))
-
 
 
 app.use("*", (req, res) => {
@@ -15,7 +17,7 @@ app.use("*", (req, res) => {
 });
 
 app.listen(process.env.PORT || 8080, function () {
-  console.log("Example app listening on port ", process.env.PORT || 8080 || 8080)
+  console.log("Example app listening on port ", process.env.PORT || 8080)
 })
 
 
@@ -23,7 +25,7 @@ function makePage(req, res) {
 	return `
 	<html>
 		<head>
-			<link rel="stylesheet" href="/bundles/can-steal-ssg/app/app.css">
+			<link rel="stylesheet" href="/bundles/${appName}/${appMain.trim().replace(/\.\w+$/, ".css")}">
 			<script>
 				steal = {
 					paths: {
@@ -34,7 +36,7 @@ function makePage(req, res) {
 			</script>
 		</head>
 		<body>
-			<script src="/bundles/can-steal-ssg/app/app.js"></script>
+			<script src="/bundles/${appName}/${appMain}"></script>
 		</body>
 	</html>
 
