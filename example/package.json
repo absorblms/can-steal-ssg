@@ -1,21 +1,7 @@
 {
-  "name": "can-steal-ssg",
+  "name": "can-steal-ssg-example",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/canjs/can-steal-ssg.git"
-  },
-  "author": "Bitovi",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/canjs/can-steal-ssg/issues"
-  },
-  "homepage": "https://github.com/canjs/can-steal-ssg#readme",
+  "main": "app/app.js",
   "dependencies": {
     "can-globals": "^1.2.2",
     "can-route": "^5.0.2",
@@ -26,6 +12,8 @@
     "express": "^4.18.2",
     "jsdom": "^20.0.3",
     "steal": "^2.3.0",
+    "steal-css": "^1.3.2",
+    "can-steal-ssg": "../",
     "steal-tools": "^2.3.0",
     "w3c-xmlhttprequest": "^3.0.4"
   },
@@ -38,16 +26,10 @@
     "plugins": [
       "can-steal-ssg",
       "steal-css"
-    ],
-    "bundle": [
-      "can-steal-ssg/app/moo/moo"
     ]
   },
   "engines": {
     "node": ">=14",
     "npm": ">=6.0.0 <7"
-  },
-  "devDependencies": {
-    "steal-css": "^1.3.2"
   }
 }
