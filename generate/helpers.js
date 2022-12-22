@@ -13,9 +13,11 @@ const helpers = {
 		const html = `<!doctype html>
 		<head></head>
 		<body></body>`
-
+		const virtualConsole = new jsdom.VirtualConsole();
+		virtualConsole.sendTo(console);
 		const dom = new JSDOM(html,{
-			url: "http://localhost:4200/"+path
+			url: "http://localhost:4200/"+path,
+			virtualConsole
 		})
 
 		// This is a bad idea, JSDOM offers options

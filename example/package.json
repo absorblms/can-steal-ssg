@@ -8,12 +8,13 @@
     "can-route-pushstate": "^6.0.0",
     "can-stache-element": "^1.2.0",
     "can-stache-route-helpers": "^2.0.0",
+    "can-steal-ssg": "1.0.0",
     "can-zone": "^1.0.1",
     "express": "^4.18.2",
     "jsdom": "^20.0.3",
+    "regenerator-runtime": "^0.13.11",
     "steal": "^2.3.0",
     "steal-css": "^1.3.2",
-    "can-steal-ssg": "../",
     "steal-tools": "^2.3.0",
     "w3c-xmlhttprequest": "^3.0.4"
   },
@@ -26,7 +27,16 @@
     "plugins": [
       "can-steal-ssg",
       "steal-css"
-    ]
+    ],
+    "bundle": [
+      "can-steal-ssg-example/app/moo/moo"
+    ],
+    "meta": {
+      "regenerator-runtime": {
+        "format": "global",
+        "exports": "regeneratorRuntime"
+      }
+    }
   },
   "engines": {
     "node": ">=14",

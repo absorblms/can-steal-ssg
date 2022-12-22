@@ -1,32 +1,51 @@
 const express = require("express")
 const path = require("path")
 
+const {
+	name: appName,
+	main: appMain
+} = require(path.join(process.cwd(), "package.json"));
 
-const app = express()
+module.exports = function({
+	main,
+	port
+}) {
+	const app = express()
 
-const rootDir = process.cwd();
+	const rootDir = process.cwd();
 
-// root things
-app.use("/get-app-running.js", express.static(path.join(rootDir, "get-app-running.js")))
-app.use("/index.js", express.static(path.join(rootDir, "index.js")))
-app.use("/package.json", express.static(path.join(rootDir, "package.json")))
+	// root things
+	app.use("/package.json", express.static(path.join(rootDir, "package.json")))
 
-// app things
-app.use("/node_modules", express.static(path.join(rootDir, "node_modules")))
-app.use("/app", express.static(path.join(rootDir, "app")))
+	// app things
+	app.use("/node_modules", express.static(path.join(rootDir, "node_modules")))
+
+	const mainDir = path.dirname(appMain);
+	app.use(`/${mainDir}`, express.static(path.join(rootDir, mainDir)))
+	app.use(
+		"/",
+		express.static(
+			path.join(rootDir, mainDir),
+			{
+				index: "dev-ssg.html",
+				redirect: false
+			}
+		)
+	)
 
 
-app.use("*", (req, res) => {
-	res.send(makePage(req,res))
-});
+	app.use("*", (req, res) => {
+		res.send(makePage(req,res))
+	});
 
-app.listen(process.env.PORT || 8080, function () {
-  console.log("Example app listening on port ", process.env.PORT || 8080 || 8080)
-})
+	app.listen(port || 8080, function () {
+	  console.log("Example app listening on port ", port || 8080)
+	})
 
 
-function makePage(req, res) {
-	return `
-		<script src="/node_modules/steal/steal.js" main="~/app/app.ssgjs!can-steal-ssg"></script>
-	`
+	function makePage(req, res) {
+		return `
+			<script src="/node_modules/steal/steal.js" main="${main}!can-steal-ssg"></script>
+		`
+	}
 }

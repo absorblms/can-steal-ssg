@@ -1,7 +1,11 @@
 import "./app";
+import regeneratorRuntime from "regenerator-runtime";
 
 export const mainElementName = "app-main";
 
+export async function getRoutes() {
+	return ['/', '/moo'];
+}
 
 export function updateDocumentBeforeScrape(document) {
 	const style = document.createElement("style");
