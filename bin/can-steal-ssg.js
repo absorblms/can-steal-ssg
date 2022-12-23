@@ -20,7 +20,6 @@ program
   .action((str, options) => {
     const ssg = require(`../generate/${options.opts().environment}`)
     const opts = options.opts();
-    opts.outputPath = `${opts.dest}/${opts.environment}-ssg.html`
     ssg(opts)
   })
 

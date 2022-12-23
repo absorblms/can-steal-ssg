@@ -22,6 +22,14 @@ module.exports = function({
 
 	const mainDir = path.dirname(appMain);
 	app.use(`/${mainDir}`, express.static(path.join(rootDir, mainDir)))
+	app.use("/", (req) => {
+		const last = req.url.split("/").reverse()[0];
+		if(last && last.indexOf(".") === -1) {
+			// assume a route and add a slash to the end so the static will pick it up
+			req.url += "/";
+		}
+		req.next();
+	});
 	app.use(
 		"/",
 		express.static(

@@ -4,7 +4,7 @@ import regeneratorRuntime from "regenerator-runtime";
 export const mainElementName = "app-main";
 
 export async function getRoutes() {
-	return ['/', '/moo'];
+	return ['/', '/moo', '/notreal'];
 }
 
 export function updateDocumentBeforeScrape(document) {

@@ -1,6 +1,6 @@
 node_modules
 
 example/prod/bundles
-example/prod/prod-ssg.html
+prod-ssg.html
 
-example/app/dev-ssg.html
+dev-ssg.html
