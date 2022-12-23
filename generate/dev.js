@@ -2,8 +2,6 @@ const path = require("path");
 const fs = require("fs");
 const { Worker } = require("worker_threads");
 
-const helpers = require("./helpers");
-
 const MAX_WORKERS = 8;
 
 module.exports = async function({

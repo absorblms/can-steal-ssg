@@ -10,7 +10,10 @@ const {
   pathToSteal,
   dest,
   route = "/",
-  shouldLoadRoutes
+  shouldLoadRoutes,
+  environment = "dev",
+  BUILD_OPTIONS,
+  buildResult
 } = workerData;
 
 const dom = helpers.buildBrowserEnvironment(route);
@@ -40,15 +43,19 @@ async function renderAndWrite() {
     console.log(starts.loadedApp, "Waiting for App to complete running...")
 
     process.once("beforeExit", async (code) => {
+      const outputPath = path.join(dest, route, `${environment}-ssg.html`);
 
       console.log(starts.appComplete,"Finalizing DOM before scrape...")
-      helpers.updateForDev(dom.window.document, mainWithProcessor, pathToSteal);
+      if(environment === "prod") {
+        helpers.updateForProd(dom.window.document, {main: mainWithProcessor}, BUILD_OPTIONS, buildResult, outputPath);
+      } else {
+        helpers.updateForDev(dom.window.document, mainWithProcessor, pathToSteal);
+      }
       if(mainModules[0].updateDocumentBeforeScrape) {
         mainModules[0].updateDocumentBeforeScrape(dom.window.document)
       }
 
       console.log(starts.domFinalized, "Scraping and writing...")
-      const outputPath = path.join(dest, route, "dev-ssg.html");
       await mkdirp(path.dirname(outputPath));
       fs.writeFileSync(
         outputPath,

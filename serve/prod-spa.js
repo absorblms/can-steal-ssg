@@ -13,6 +13,14 @@ module.exports = function({
 	const app = express()
 
 	// app things
+	app.use("/", (req) => {
+		const last = req.url.split("/").reverse()[0];
+		if(last && last.indexOf(".") === -1) {
+			// assume a route and add a slash to the end so the static will pick it up
+			req.url += "/";
+		}
+		req.next();
+	});
 	app.use("/", express.static(path.join(process.cwd(), dist), {
 		redirect: false,
 		index: "prod-ssg.html"
