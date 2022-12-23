@@ -4,6 +4,8 @@ const { Worker } = require("worker_threads");
 
 const helpers = require("./helpers");
 
+const MAX_WORKERS = 8;
+
 module.exports = async function({
 	main
 }) {
@@ -12,7 +14,9 @@ module.exports = async function({
 	const stealPath = require.resolve("steal/steal.js")
 	const pathToSteal = path.relative(mainDir, stealPath);
 
-	const firstWorker = new Worker(path.join(__dirname, "dev-worker.js"), {
+	let routeIdx = 0;
+	let routes;
+	const firstWorker = new Worker(path.join(__dirname, "worker.js"), {
 		workerData: {
 			mainWithProcessor,
 			pathToSteal,
@@ -20,16 +24,27 @@ module.exports = async function({
 			shouldLoadRoutes: true
 		}
 	});
-	firstWorker.on("message", (routes) => {
-		routes.forEach(route => {
-			new Worker(path.join(__dirname, "dev-worker.js"), {
-				workerData: {
-					mainWithProcessor,
-					pathToSteal,
-					dest: mainDir,
-					route
-				}
-			})
-		})
+	firstWorker.on("message", (_routes) => {
+		routes = _routes;
+		while(routeIdx < MAX_WORKERS && routeIdx < routes.length) {
+			queueNext();
+		}
 	});
+	firstWorker.on("exit", queueNext);
+
+	function queueNext() {
+		if(routeIdx >= routes.length) {
+			return;
+		}
+		const route = routes[routeIdx++];
+		const worker = new Worker(path.join(__dirname, "worker.js"), {
+			workerData: {
+				mainWithProcessor,
+				pathToSteal,
+				dest: mainDir,
+				route
+			}
+		});
+		worker.on("exit", queueNext);
+	}
 }
