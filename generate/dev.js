@@ -2,10 +2,9 @@ const path = require("path");
 const fs = require("fs");
 const { Worker } = require("worker_threads");
 
-const MAX_WORKERS = 8;
-
 module.exports = async function({
-	main
+	main,
+	numThreads
 }) {
 	const mainWithProcessor = main.includes("!") ? main : `${main}!can-steal-ssg`;
 	const mainDir = path.dirname(mainWithProcessor.replace("~", process.cwd()));
@@ -24,7 +23,7 @@ module.exports = async function({
 	});
 	firstWorker.on("message", (_routes) => {
 		routes = _routes;
-		while(routeIdx < MAX_WORKERS && routeIdx < routes.length) {
+		while(routeIdx < numThreads - 1 && routeIdx < routes.length) {
 			queueNext();
 		}
 	});

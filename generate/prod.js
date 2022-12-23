@@ -4,12 +4,13 @@ const fs = require("fs")
 
 const stealTools = require("steal-tools")
 
-const MAX_WORKERS = 8;
+const numThreads = 8;
 
 module.exports = async function({
 	main,
 	configPath,
-	dest
+	dest,
+	numThreads
 }) {
 	const BUILD_OPTIONS = {
 	  dest: path.join(process.cwd(), dest),
@@ -50,7 +51,7 @@ module.exports = async function({
 		});
 		firstWorker.on("message", (_routes) => {
 			routes = _routes;
-			while(routeIdx < MAX_WORKERS && routeIdx < routes.length) {
+			while(routeIdx < numThreads - 1 && routeIdx < routes.length) {
 				queueNext();
 			}
 		});
