@@ -2,16 +2,16 @@ const Zone = require("can-zone");
 const xhrZone = require("can-zone/xhr");
 const RoutePushstate = require("can-route-pushstate");
 const isNode = require("can-globals/is-node/is-node");
+const fetchZone = require("./fetch-zone");
 
 isNode(false);
 
-const sharedZone = new Zone({ plugins: [xhrZone] })
+const sharedZone = new Zone({ plugins: [xhrZone, fetchZone] })
 
 function beforeEverything(){
 	if(globalThis.customElements) {
 		const oldDefine = customElements.define;
 		customElements.define = function(tag, ElementClass){
-
 			class RehydrateClass extends ElementClass {
 				initialize(...args){
 					if(this.getAttribute("can-ssg") === "inert") {
@@ -28,10 +28,10 @@ function beforeEverything(){
 					}
 				}
 				disconnectedCallback(...args){
-					if(this.__isInert) {
+					if(this.getAttribute("can-ssg") === "inert") {
 
 					} else {
-						return super.connectedCallback(...args)
+						return super.disconnectedCallback(...args)
 					}
 				}
 			}
@@ -46,11 +46,20 @@ beforeEverything();
 module.exports = {
 	after(mainElementName){
 		sharedZone
-    .run(() => {})
+    .run(() => {
+    	if (!document.body.getAttribute("can-ssg")) {
+				document.body.append(document.createElement(mainElementName));
+			}
+    })
     .then(function (data) {
       if (!globalThis.XHR_CACHE && data.xhr) {
         const temp = document.createElement("div")
         temp.innerHTML = `<script>${data.xhr}</script>`
+        document.body.appendChild(temp.lastChild)
+      }
+      if (!globalThis.FETCH_CACHE && data.fetch) {
+        const temp = document.createElement("div")
+        temp.innerHTML = `<script>${data.fetch}</script>`
         document.body.appendChild(temp.lastChild)
       }
     })
@@ -58,7 +67,7 @@ module.exports = {
 		if (document.body.getAttribute("can-ssg")) {
 			//setTimeout(function(){
 				new Zone({
-					plugins: [xhrZone],
+					plugins: [xhrZone, fetchZone],
 				})
 					.run(function () {
 						// Check if global flag is set to skip hydration
@@ -90,8 +99,6 @@ module.exports = {
 					})
 			//},5000)
 
-		} else {
-			document.body.append(document.createElement(mainElementName));
 		}
 	}
 }

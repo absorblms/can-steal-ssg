@@ -5,6 +5,7 @@ const fs = require("fs")
 const url = require("url")
 const jsdom = require("jsdom")
 const { JSDOM } = jsdom
+const fetch = require("node-fetch-commonjs")
 
 const { XMLHttpRequest } = require("w3c-xmlhttprequest")
 
@@ -41,6 +42,7 @@ const helpers = {
 		global.location = dom.window.location
 		global.Node = window.Node
 		global.XMLHttpRequest = XMLHttpRequest
+		global.fetch = fetch
 		global.history = {};
 		global.addEventListener = function(){}
 		return dom;

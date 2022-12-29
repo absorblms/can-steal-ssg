@@ -27,7 +27,7 @@ program
 program
   .command("serve")
   .description("Start a Web server that will serve pages and assets for a statically built site")
-  .addOption(new Option("-e, --environment <string>", "which environment to build from ssg.json", "dev").choices(['dev', 'prod']))
+  .addOption(new Option("-e, --environment <string>", "which environment to build from ssg.json").default("dev").choices(['dev', 'prod']))
   .option("-m --main <string>", "path to the steal main for serving SSG mode", "~/app/app.ssgjs")
   .option("-d --dist <string>", "root of the build distribution for production mode", "./prod")
   .addOption(new Option("-p --port <number>", "port number to serve on").default(8080).env("PORT"))

@@ -2,6 +2,7 @@ import StacheElement from "can-stache-element";
 import "./app.css";
 import route from "can-route";
 import "can-stache-route-helpers";
+import ajax from "can-ajax";
 import RoutePushstate from "can-route-pushstate";
 
 route.urlData = new RoutePushstate();
@@ -16,6 +17,7 @@ class AppMain extends StacheElement {
     <p>Top 5 animal in the world is Cow</p>
     <p>First: {{ first }}</p>
     <p>Second: {{ second }}</p>
+    <p>Third: {{ third }}</p>
 		<button on:click="this.click()">Click</button>
 		{{# if(this.clicked) }}clicked{{/ if}}
 
@@ -38,6 +40,7 @@ class AppMain extends StacheElement {
   static props = {
     first: "",
     second: "",
+    third: "",
 		clicked: {default: false},
 		routeData: {
       get default() {
@@ -70,6 +73,30 @@ class AppMain extends StacheElement {
     setTimeout(() => {
       this.second = "0.01 minutes have passed"
     }, 600)
+
+    setTimeout(() => {
+	  	// ajax({
+	  	// 	method: "get",
+	  	// 	url: "http://echo.jsontest.com/foo/bar"
+	  	// }).then(json => {
+	  	// 	console.log("XHR Complete!")
+	  	// 	this.third = json.foo
+	  	// }, error => {
+	  	// 	console.error("XHR Error!", error);
+	  	// });
+	  	fetch(
+	  		"http://echo.jsontest.com/foo/bar",
+  		{
+	  		method: "get",
+	  	}).then(resp => {
+	  		return resp.json();
+	  	}).then(json => {
+	  		console.log("XHR Complete!")
+	  		this.third = json.foo
+	  	}, error => {
+	  		console.error("XHR Error!", error);
+	  	});
+    }, 650)
   }
 	click(){
 		this.clicked = true;

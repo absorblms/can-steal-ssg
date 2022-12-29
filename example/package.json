@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "app/app.js",
   "dependencies": {
+    "can-ajax": "^2.4.7",
     "can-globals": "^1.2.2",
     "can-route": "^5.0.2",
     "can-route-pushstate": "^6.0.0",
