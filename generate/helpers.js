@@ -44,6 +44,8 @@ const helpers = {
 		global.XMLHttpRequest = XMLHttpRequest
 		global.fetch = fetch
 		global.history = {};
+	  global.location = dom.window.location
+  	global.navigator = dom.window.navigator
 		global.addEventListener = function(){}
 		return dom;
 	},
