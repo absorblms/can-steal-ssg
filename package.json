@@ -1,13 +1,13 @@
 {
   "name": "can-steal-ssg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "can-steal-ssg": "bin/can-steal-ssg"
+    "can-steal-ssg": "bin/can-steal-ssg.js"
   },
   "repository": {
     "type": "git",
