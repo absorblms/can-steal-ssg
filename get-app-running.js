@@ -12,30 +12,49 @@ function beforeEverything(){
 	if(globalThis.customElements) {
 		const oldDefine = customElements.define;
 		customElements.define = function(tag, ElementClass){
-			class RehydrateClass extends ElementClass {
-				initialize(...args){
-					if(this.getAttribute("can-ssg") === "inert") {
+			// can-view-callbacks creates elements with Reflect.construct
+			//   that don't work with the StacheElement overwriting scheme in jsdom,
+			//   so we have to work differently with those classes.
+			if(
+				ElementClass.toString().indexOf("function") === 0
+				&& ElementClass.name === "CustomElement"
+			) {
+				class RehydrateClass extends HTMLElement {
+					connectedCallback(...args){
+						if(this.getAttribute("can-ssg") === "inert") {
 
-					} else {
-						return super.initialize(...args)
+						} else {
+							return ElementClass.prototype.connectedCallback.apply(this, args)
+						}
 					}
 				}
-				connectedCallback(...args){
-					if(this.getAttribute("can-ssg") === "inert") {
+				oldDefine.call(this, tag, RehydrateClass)
+			} else {
+				class RehydrateClass extends ElementClass {
+					initialize(...args){
+						if(this.getAttribute("can-ssg") === "inert") {
 
-					} else {
-						return super.connectedCallback(...args)
+						} else {
+							return super.initialize(...args)
+						}
+					}
+					connectedCallback(...args){
+						if(this.getAttribute("can-ssg") === "inert") {
+
+						} else {
+							return super.connectedCallback(...args)
+						}
+					}
+					disconnectedCallback(...args){
+						if(this.getAttribute("can-ssg") === "inert") {
+
+						} else {
+							return super.disconnectedCallback(...args)
+						}
 					}
 				}
-				disconnectedCallback(...args){
-					if(this.getAttribute("can-ssg") === "inert") {
-
-					} else {
-						return super.disconnectedCallback(...args)
-					}
-				}
+				oldDefine.call(this, tag, RehydrateClass)
 			}
-			oldDefine.call(this, tag, RehydrateClass)
 		}
 	}
 
@@ -46,23 +65,23 @@ beforeEverything();
 module.exports = {
 	after(mainElementName){
 		sharedZone
-    .run(() => {
-    	if (!document.body.getAttribute("can-ssg")) {
+		.run(() => {
+			if (!document.body.getAttribute("can-ssg")) {
 				document.body.append(document.createElement(mainElementName));
 			}
-    })
-    .then(function (data) {
-      if (!globalThis.XHR_CACHE && data.xhr) {
-        const temp = document.createElement("div")
-        temp.innerHTML = `<script>${data.xhr}</script>`
-        document.body.appendChild(temp.lastChild)
-      }
-      if (!globalThis.FETCH_CACHE && data.fetch) {
-        const temp = document.createElement("div")
-        temp.innerHTML = `<script>${data.fetch}</script>`
-        document.body.appendChild(temp.lastChild)
-      }
-    })
+		})
+		.then(function (data) {
+			if (!globalThis.XHR_CACHE && data.xhr) {
+				const temp = document.createElement("div")
+				temp.innerHTML = `<script>${data.xhr}</script>`
+				document.body.appendChild(temp.lastChild)
+			}
+			if (!globalThis.FETCH_CACHE && data.fetch) {
+				const temp = document.createElement("div")
+				temp.innerHTML = `<script>${data.fetch}</script>`
+				document.body.appendChild(temp.lastChild)
+			}
+		})
 
 		if (document.body.getAttribute("can-ssg")) {
 			//setTimeout(function(){

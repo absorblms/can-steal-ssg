@@ -37,6 +37,7 @@ const helpers = {
 		global.window = dom.window
 		global.HTMLElement = dom.window.HTMLElement
 		global.NodeFilter = dom.window.NodeFilter
+		global.DocumentFragment = dom.window.DocumentFragment
 		global.customElements = dom.window.customElements
 		global.document = dom.window.document
 		global.location = dom.window.location
