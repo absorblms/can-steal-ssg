@@ -1,5 +1,6 @@
 const express = require("express")
 const path = require("path")
+const fs = require("fs")
 
 const {
 	name: appName,
@@ -18,9 +19,20 @@ module.exports = function({
 	app.use("/package.json", express.static(path.join(rootDir, "package.json")))
 
 	// app things
-	app.use("/node_modules", express.static(path.join(rootDir, "node_modules")))
+	app.use("/node_modules", express.static(path.join(rootDir, "node_modules"), { fallthrough: false }))
 
 	const mainDir = path.dirname(appMain);
+	const rootChildren = fs.readdirSync(rootDir).filter(
+		dir => dir !== "node_modules" && dir !== "dist" && dir[0] !== "."
+	);
+	// set up a static route for each child folder of the root
+	[mainDir, ...rootChildren].forEach(dir => {
+		const fullDir = path.join(rootDir, dir);
+		if(fs.statSync(fullDir).isDirectory()) {
+			app.use(`/${dir}`, express.static(fullDir))
+		}
+	})
+
 	app.use(`/${mainDir}`, express.static(path.join(rootDir, mainDir)))
 	app.use("/", (req) => {
 		const last = req.url.split("/").reverse()[0];
@@ -47,7 +59,7 @@ module.exports = function({
 	});
 
 	app.listen(port || 8080, function () {
-	  console.log("Example app listening on port ", port || 8080)
+		console.log("Example app listening on port ", port || 8080)
 	})
 
 

@@ -9,7 +9,7 @@
     "can-route-pushstate": "^6.0.0",
     "can-stache-element": "^1.2.0",
     "can-stache-route-helpers": "^2.0.0",
-    "can-steal-ssg": "1.0.0",
+    "can-steal-ssg": "^1.0.2",
     "can-zone": "^1.0.1",
     "express": "^4.18.2",
     "jsdom": "^20.0.3",
