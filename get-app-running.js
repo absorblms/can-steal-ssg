@@ -1,8 +1,8 @@
 const Zone = require("can-zone");
 const xhrZone = require("can-zone/xhr");
+const fetchZone = require("can-zone/fetch");
 const RoutePushstate = require("can-route-pushstate");
 const isNode = require("can-globals/is-node/is-node");
-const fetchZone = require("./fetch-zone");
 
 isNode(false);
 
