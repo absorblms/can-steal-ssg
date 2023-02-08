@@ -71,7 +71,9 @@ const helpers = {
 		// remove all style tags ... I wish we knew which ones were injected by steal ...
 		// steal could start using adoptStyles
 		Array.from( document.getElementsByTagName("style") ).forEach((style)=>{
-			style.remove();
+			if(style.innerHTML.indexOf("/*# sourceURL=") > -1) {
+				style.remove();
+			}
 		})
 
 		document.body.setAttribute("can-ssg","prod")
@@ -133,7 +135,10 @@ const helpers = {
 		      plugins: ["transform-class-properties"],
 		    },
 		    plugins: ["can"],
-		  });
+				map: {
+					"steal-less/less-engine": "steal-less/less-engine-node"
+				}
+			});
 	},
 	pad: function(logs) {
 		const pad = Math.max(...Object.values(logs).map( l => l.length));
