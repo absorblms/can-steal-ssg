@@ -131,6 +131,7 @@ const helpers = {
 		return steal
 		  .startup({
 		    main: main,
+		    configMain: "package.json!npm", // have to specify the "default" to avoid a Windows bug in steal
 		    babelOptions: {
 		      plugins: ["transform-class-properties"],
 		    },
