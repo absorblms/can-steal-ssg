@@ -10,7 +10,8 @@ module.exports = async function({
 	main,
 	configPath,
 	dest,
-	numThreads
+	numThreads,
+	outputFileName
 }) {
 	const BUILD_OPTIONS = {
 	  dest: path.join(process.cwd(), dest),
@@ -44,6 +45,7 @@ module.exports = async function({
 				mainWithProcessor,
 				dest,
 				environment: "prod",
+				outputFileName,
 				BUILD_OPTIONS,
 				buildResult,
 				shouldLoadRoutes: true
@@ -67,6 +69,7 @@ module.exports = async function({
 					mainWithProcessor,
 					dest,
 					environment: "prod",
+					outputFileName,
 					BUILD_OPTIONS,
 					buildResult,
 					route

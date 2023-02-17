@@ -8,7 +8,8 @@ const {
 
 module.exports = function({
 	dist,
-	port
+	port,
+	indexFileName = "prod-ssg.html"
 }) {
 	const app = express()
 
@@ -23,7 +24,7 @@ module.exports = function({
 	});
 	app.use("/", express.static(path.join(process.cwd(), dist), {
 		redirect: false,
-		index: "prod-ssg.html"
+		index: indexFileName
 	}))
 
 

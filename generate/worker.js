@@ -12,6 +12,7 @@ const {
   route = "/",
   shouldLoadRoutes,
   environment = "dev",
+  outputFileName = `${environment}-ssg.html`,
   BUILD_OPTIONS,
   buildResult
 } = workerData;
@@ -43,7 +44,7 @@ async function renderAndWrite() {
     console.log(starts.loadedApp, "Waiting for App to complete running...")
 
     process.once("beforeExit", async (code) => {
-      const outputPath = path.join(dest, route, `${environment}-ssg.html`);
+      const outputPath = path.join(dest, route, outputFileName);
 
       console.log(starts.appComplete,"Finalizing DOM before scrape...")
       if(environment === "prod") {

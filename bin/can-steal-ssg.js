@@ -23,6 +23,7 @@ program
   .option("-m, --main <string>", "path to the steal main for building SSG mode", defaultSSGEntryPoint)
   .option("-c, --config-path <string>", "path to the steal config file", "package.json!npm")
   .option("-d, --dest <string>", "root of the output tree for production builds", "./prod")
+  .option("-f, --output-file-name <string>", "file name to write to")
   .option("-n, --num-threads <number>", "Maximum number of worker threads to spawn for SSG jobs", 8)
   .action((str, options) => {
     const ssg = require(`../generate/${options.opts().environment}`)
@@ -36,6 +37,7 @@ program
   .addOption(new Option("-e, --environment <string>", "which environment to serve").default("dev").choices(['dev', 'prod']))
   .option("-m --main <string>", "path to the steal main for serving SSG mode", defaultSSGEntryPoint)
   .option("-d --dist <string>", "root of the build distribution for production mode", "./prod")
+  .option("-f, --index-file-name <string>", "file name for SSG-built route files")
   .addOption(new Option("-p --port <number>", "port number to serve on").default(8080).env("PORT"))
   .action((str, options) => {
     const server = require(`../serve/${options.opts().environment}-spa`)

@@ -4,7 +4,8 @@ const { Worker } = require("worker_threads");
 
 module.exports = async function({
 	main,
-	numThreads
+	numThreads,
+	outputFileName
 }) {
 	const mainWithProcessor = main.includes("!") ? main : `${main}!can-steal-ssg`;
 	const mainDir = path.dirname(mainWithProcessor.replace("~", process.cwd()));
@@ -17,6 +18,7 @@ module.exports = async function({
 		workerData: {
 			mainWithProcessor,
 			pathToSteal,
+			outputFileName,
 			dest: mainDir,
 			shouldLoadRoutes: true
 		}
@@ -38,6 +40,7 @@ module.exports = async function({
 			workerData: {
 				mainWithProcessor,
 				pathToSteal,
+				outputFileName,
 				dest: mainDir,
 				route
 			}

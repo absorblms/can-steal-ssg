@@ -9,7 +9,8 @@ const {
 
 module.exports = function({
 	main,
-	port
+	port,
+	indexFileName = "dev-ssg.html"
 }) {
 	const app = express()
 
@@ -47,7 +48,7 @@ module.exports = function({
 		express.static(
 			path.join(rootDir, mainDir),
 			{
-				index: "dev-ssg.html",
+				index: indexFileName,
 				redirect: false
 			}
 		)
