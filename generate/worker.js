@@ -60,7 +60,7 @@ async function renderAndWrite() {
       await mkdirp(path.dirname(outputPath));
       fs.writeFileSync(
         outputPath,
-        dom.window.document.documentElement.outerHTML
+        dom.serialize()
       );
       console.log("Updated ", outputPath,".")
     });

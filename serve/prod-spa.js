@@ -39,6 +39,7 @@ module.exports = function({
 
 	function makePage(req, res) {
 		return `
+		<!DOCTYPE html>
 		<html>
 			<head>
 				<link rel="stylesheet" href="/bundles/${appName}/${appMain.trim().replace(/\.\w+$/, ".css")}">
