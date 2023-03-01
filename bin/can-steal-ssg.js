@@ -21,6 +21,7 @@ program
   .description("Create a static site build of a CanJS application")
   .addOption(new Option("-e, --environment <string>", "which environment to build").default("dev").choices(['dev', 'prod']))
   .option("-m, --main <string>", "path to the steal main for building SSG mode", defaultSSGEntryPoint)
+  .option("-b, --build-options-path <string>", "optional path to a steal-tools build options file for production builds")
   .option("-c, --config-path <string>", "path to the steal config file", "package.json!npm")
   .option("-d, --dest <string>", "root of the output tree for production builds", "./prod")
   .option("-f, --output-file-name <string>", "file name to write to")

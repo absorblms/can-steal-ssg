@@ -1,8 +1,8 @@
 const { Worker } = require("worker_threads");
 const path = require("path");
-const fs = require("fs")
+const fs = require("fs");
 
-const stealTools = require("steal-tools")
+const stealTools = require("steal-tools");
 
 const numThreads = 8;
 
@@ -11,13 +11,18 @@ module.exports = async function({
 	configPath,
 	dest,
 	numThreads,
-	outputFileName
+	outputFileName,
+	buildOptionsPath
 }) {
 	const BUILD_OPTIONS = {
 	  dest: path.join(process.cwd(), dest),
-	  bundleSteal: true,
-		minify: false
+		bundleSteal: true,
+		minify: true
 	};
+	if (buildOptionsPath) {
+		Object.assign(BUILD_OPTIONS, require(path.join(process.cwd(), buildOptionsPath)));
+	}
+
 	const mainWithProcessor = main.includes("!") ? main : `${main}!can-steal-ssg`;
 
 	console.log("Starting build into", dest,".");
