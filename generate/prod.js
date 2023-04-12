@@ -1,8 +1,10 @@
 const { Worker } = require("worker_threads");
 const path = require("path");
+const minify = require('babel-preset-minify');
 const fs = require("fs");
 
 const stealTools = require("steal-tools");
+const babelMinify = require("steal-tools/lib/build_types/babel-minify");
 
 const numThreads = 8;
 
@@ -25,6 +27,39 @@ module.exports = async function({
 
 	const mainWithProcessor = main.includes("!") ? main : `${main}!can-steal-ssg`;
 
+    const localBuildOptions = BUILD_OPTIONS.minify === 'babel-minify' ? {
+        babelMinifyOptions: {
+            ...BUILD_OPTIONS.babelMinifyOptions || {},
+            minifyPreset(context, _opts = {}) {
+                return minify(
+                    context,
+                    {
+                        ..._opts,
+                        mangle: {
+                            ..._opts.mangle || {},
+                            exclude: {
+                                ...(_opts.mangle && opts.mangle.exclude || {}),
+                                'CustomElement': true
+                            }
+                        }
+                    }
+                );
+            }
+        }
+    } : {
+        uglifyOptions: {
+            ...(BUILD_OPTIONS.uglifyOptions || {}),
+            mangle: {
+                ...(BUILD_OPTIONS.uglifyOptions && buildOptions.uglifyOptions.mangle || {}),
+                reserved: (
+                    BUILD_OPTIONS.uglifyOptions &&
+                    buildOptions.uglifyOptions.mangle &&
+                    buildOptions.uglifyOptions.mangle.reserved || []
+                ).concat(['CustomElement'])
+            }
+        }
+    };
+
 	console.log("Starting build into", dest,".");
 	try {
 		const fullBuildResult = await stealTools.build(
@@ -32,7 +67,10 @@ module.exports = async function({
 			  config: configPath,
 				main: mainWithProcessor
 			},
-			BUILD_OPTIONS
+			{
+                ...BUILD_OPTIONS,
+                ...localBuildOptions
+            }
 		);
 		const buildResult = {
 			bundles: fullBuildResult.bundles.map(
