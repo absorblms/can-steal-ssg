@@ -91,7 +91,8 @@ const helpers = {
 
 			const prodScript = document.createElement("script");
 			prodScript.setAttribute("src",pathToBundle);
-			document.body.append(prodScript);
+			// Disabling the writting in of the bundled JS script
+			// document.body.append(prodScript);
 		}
 
 		const mainCssBundle = buildResult.bundles.find( (bundle) => {
