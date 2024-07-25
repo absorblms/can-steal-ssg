@@ -71,16 +71,17 @@ module.exports = {
 			}
 		})
 		.then(function (data) {
-			if (!globalThis.XHR_CACHE && data.xhr) {
-				const temp = document.createElement("div")
-				temp.innerHTML = `<script>${data.xhr}</script>`
-				document.body.appendChild(temp.lastChild)
-			}
-			if (!globalThis.FETCH_CACHE && data.fetch) {
-				const temp = document.createElement("div")
-				temp.innerHTML = `<script>${data.fetch}</script>`
-				document.body.appendChild(temp.lastChild)
-			}
+			// Disabling the writting in of XHR_Cache
+			// if (!globalThis.XHR_CACHE && data.xhr) {
+			// 	const temp = document.createElement("div")
+			// 	temp.innerHTML = `<script>${data.xhr}</script>`
+			// 	document.body.appendChild(temp.lastChild)
+			// }
+			// if (!globalThis.FETCH_CACHE && data.fetch) {
+			// 	const temp = document.createElement("div")
+			// 	temp.innerHTML = `<script>${data.fetch}</script>`
+			// 	document.body.appendChild(temp.lastChild)
+			// }
 		})
 
 		if (document.body.getAttribute("can-ssg")) {
