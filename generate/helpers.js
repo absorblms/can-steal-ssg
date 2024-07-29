@@ -21,19 +21,6 @@ const helpers = {
 			virtualConsole
 		})
 
-		// This is a bad idea, JSDOM offers options
-		// in its constructor to navigate "naturally" to a page
-		//delete dom.window.location
-		//dom.window.location = url.parse("http://localhost:4200", true)
-
-		//if (!dom.window.location.protocol) {
-		//  dom.window.location.protocol = "http:"
-		//}
-
-		// if(request.headers && request.headers["accept-language"]) {
-		//     dom.navigator.language = request.headers["accept-language"];
-		// }
-
 		global.window = dom.window
 		global.HTMLElement = dom.window.HTMLElement
 		global.NodeFilter = dom.window.NodeFilter
@@ -45,8 +32,8 @@ const helpers = {
 		global.XMLHttpRequest = XMLHttpRequest
 		global.fetch = fetch
 		global.history = {};
-	  global.location = dom.window.location
-  	global.navigator = dom.window.navigator
+		global.location = dom.window.location
+		global.navigator = dom.window.navigator
 		global.addEventListener = function(){}
 		return dom;
 	},
@@ -70,6 +57,7 @@ const helpers = {
 	updateForProd: function(document, config, buildOptions, buildResult, outputPath){
 		// remove all style tags ... I wish we knew which ones were injected by steal ...
 		// steal could start using adoptStyles
+
 		Array.from( document.getElementsByTagName("style") ).forEach((style)=>{
 			if(style.innerHTML.indexOf("/*# sourceURL=") > -1) {
 				style.remove();
@@ -86,7 +74,7 @@ const helpers = {
 			return bundle.bundles.includes(mainModuleFullName) && bundle.buildType === "js";
 		})
 
-		if(mainJSBundle) {
+		if (mainJSBundle) {
 			const pathToBundle = path.relative(path.dirname(outputPath), mainJSBundle.bundlePath);
 
 			const prodScript = document.createElement("script");
@@ -98,18 +86,19 @@ const helpers = {
 		const mainCssBundle = buildResult.bundles.find( (bundle) => {
 			return bundle.bundles.includes(mainModuleFullName) && bundle.buildType === "css";
 		});
-		if(mainCssBundle) {
-			const pathToCSSBundle = path.relative(path.dirname(outputPath), mainCssBundle.bundlePath);
 
+		if (mainCssBundle) {
+			const relativePath = path.relative(path.dirname(outputPath), mainCssBundle.bundlePath);
+			const pathToCSSBundle = path.format({ root: '/', base: relativePath });
 			const prodCSS = document.createElement("link");
 			prodCSS.setAttribute("rel","stylesheet");
-			prodCSS.setAttribute("href",pathToCSSBundle);
+			prodCSS.setAttribute("href", path.normalize(pathToCSSBundle));
 			document.head.append(prodCSS);
-
-
 		}
+
 		const aBundlePath = mainJSBundle?.bundlePath ?? mainCssBundle?.bundlePath;
-		if(aBundlePath) {
+
+		if (aBundlePath) {
 			const pathToBundles = path.relative(path.dirname(outputPath), aBundlePath.replace(/bundles\/.*/,"bundles"));
 
 			const stealConfigScript = document.createElement("script");
@@ -130,13 +119,13 @@ const helpers = {
 	},
 	loadAppInExistingBrowserEnvironment(main){
 		return steal
-		  .startup({
-		    main: main,
-		    configMain: "package.json!npm", // have to specify the "default" to avoid a Windows bug in steal
-		    babelOptions: {
-		      plugins: ["transform-class-properties"],
-		    },
-		    plugins: ["can"],
+			.startup({
+				main: main,
+				configMain: "package.json!npm", // have to specify the "default" to avoid a Windows bug in steal
+				babelOptions: {
+					plugins: ["transform-class-properties"],
+				},
+				plugins: ["can"],
 				map: {
 					"steal-less/less-engine": "steal-less/less-engine-node"
 				}

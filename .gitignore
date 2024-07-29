@@ -4,3 +4,5 @@ example/prod/bundles
 prod-ssg.html
 
 dev-ssg.html
+.idea/
+*.iml
