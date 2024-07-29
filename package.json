@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "bump": "cross-env ./bin/bump.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
@@ -39,5 +40,8 @@
   "engines": {
     "node": ">=14",
     "npm": ">=6.0.0 <7"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
